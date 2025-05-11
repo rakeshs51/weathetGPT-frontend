@@ -23,7 +23,11 @@ function App() {
       setChat(prev => [...prev, { role: 'assistant', content: response.data.response }]);
     } catch (error) {
       console.error('Error:', error);
-      setChat(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
+      let errorMsg = 'Sorry, I encountered an error. Please try again.';
+      if (error.response && error.response.status === 429) {
+        errorMsg = 'Weather service is busy (rate limit exceeded). Please try again later.';
+      }
+      setChat(prev => [...prev, { role: 'assistant', content: errorMsg }]);
     }
 
     setMessage('');
